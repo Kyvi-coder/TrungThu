@@ -704,19 +704,54 @@ const bgm = document.getElementById("bgm");
 const audioBtn = document.getElementById("audio-btn");
 let isPlaying = false;
 
+async function tryPlayAudio() {
+  if (!bgm) return;
+
+  try {
+    bgm.volume = 0.6;
+    await bgm.play();
+    isPlaying = true;
+    audioBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+  } catch (error) {
+    isPlaying = false;
+    audioBtn.innerHTML = '<i class="fas fa-music" style="opacity:0.5;"></i>';
+  }
+}
+
+function pauseAudio() {
+  bgm.pause();
+  isPlaying = false;
+  audioBtn.innerHTML = '<i class="fas fa-music" style="opacity:0.5;"></i>';
+}
+
+window.addEventListener(
+  "pointerdown",
+  () => {
+    if (!isPlaying) {
+      tryPlayAudio();
+    }
+  },
+  { once: true, passive: true },
+);
+
+window.addEventListener(
+  "keydown",
+  () => {
+    if (!isPlaying) {
+      tryPlayAudio();
+    }
+  },
+  { once: true },
+);
+
+tryPlayAudio();
+
 audioBtn.addEventListener("click", () => {
   if (isPlaying) {
-    bgm.pause();
-    audioBtn.innerHTML = '<i class="fas fa-music" style="opacity:0.5;"></i>';
+    pauseAudio();
   } else {
-    bgm
-      .play()
-      .then(() => {
-        audioBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
-      })
-      .catch(() => {});
+    tryPlayAudio();
   }
-  isPlaying = !isPlaying;
 });
 
 // ANIMATION
