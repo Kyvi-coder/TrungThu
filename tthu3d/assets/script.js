@@ -709,6 +709,8 @@ async function tryPlayAudio() {
 
   try {
     bgm.volume = 0.6;
+    bgm.muted = false;
+    bgm.autoplay = true;
     await bgm.play();
     isPlaying = true;
     audioBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
@@ -731,7 +733,7 @@ window.addEventListener(
       tryPlayAudio();
     }
   },
-  { once: true, passive: true },
+  { passive: true },
 );
 
 window.addEventListener(
@@ -741,8 +743,19 @@ window.addEventListener(
       tryPlayAudio();
     }
   },
-  { once: true },
 );
+
+window.addEventListener("load", () => {
+  setTimeout(() => {
+    tryPlayAudio();
+  }, 250);
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  setTimeout(() => {
+    tryPlayAudio();
+  }, 150);
+});
 
 tryPlayAudio();
 
